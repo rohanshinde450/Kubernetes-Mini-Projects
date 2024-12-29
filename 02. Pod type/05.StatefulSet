@@ -1,0 +1,55 @@
+---------**** StatefulSet ****-------
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+    name: db
+spec:
+    replicas: 3
+    selector:
+         matchLabels:
+               app: mydb
+    serviceName: "dbservice"
+    template:
+      metadata:
+          labels:
+             app: mydb
+      spec:
+         containers:
+             - name: mydbcontainer
+               image: mysql
+               env:
+                 - name: MYSQL_ROOT_PASSWORD
+                   valueFrom:
+                      configMapKeyRef:
+                         name: mysql-config
+                         key:  mysql-password
+               ports:
+                 - containerPort: 3306
+    volumeClaimTemplates:
+          - metadata:
+               name: dbb
+            spec:
+               accessModes: ["ReadWriteOnce"]
+               resources:
+                  requests:
+                     storage: 1Gi
+                  limits:
+                     storage: 1Gi
+
+
+
+----------------**** PVWALA.yml****--------------
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+    name: mypv
+spec:
+   capacity:
+      storage: 1Gi
+   accessModes:
+       - ReadWriteOnce
+   persistentVolumeReclaimPolicy: Retain
+   hostPath:
+       path: /mydata

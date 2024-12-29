@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: mydeployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      env: dev
+  template:
+       metadata:
+          labels:
+              env: dev
+       spec:
+            containers:
+                 - name: nginxcontainer
+                   image: nginx
+                   ports:
+                     - containerPort: 80
+                   volumeMounts:
+                     - mountPath: "/usr/share/nginx/html"
+                       name: myvolume
+
+            volumes:
+                 - name: myvolume
+                   hostPath:
+                      path: /data
+                      type: DirectoryOrCreate

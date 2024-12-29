@@ -1,0 +1,26 @@
+1) kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+2) kubectl edit deploy metrics-server -n kube-system
+--------(last chya 2 line add kara fkt)------------
+args:
+- --cert-dir=/tmp
+- --secure-port=10250
+- --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+- --kubelet-use-node-status-port
+- --metric-resolution=15s
+- --kubelet-insecure-tls
+- --requestheader-allowed-names=*
+
+3) kubectl get pods -n kube-system
+
+4) kubectl get deploy -n kube-system
+
+*** [ metrics-server running made asel tr success zal aahe ] ***
+
+5) nano mynginx.yml
+
+6) nano hpwala.yml
+
+7) apply, apply
+
+8)  kubectl run -it tupod --image=busybox -- /bin/bash -c "while true; do wget -q -O- http://<pod ip taka>; done"

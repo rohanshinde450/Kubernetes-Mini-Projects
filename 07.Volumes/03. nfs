@@ -1,0 +1,34 @@
+sudo apt-get install nfs-common
+sudo apt-get install nfsutlis
+
+nfs attach
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: mydeployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      env: dev
+  template:
+       metadata:
+          labels:
+              env: dev
+       spec:
+            containers:
+                 - name: nginxcontainer
+                   image: nginx
+                   ports:
+                     - containerPort: 80
+                   volumeMounts:
+                     - mountPath: "/usr/share/nginx/html"
+                       name: myvolume
+
+            volumes:
+                 - name: myvolume
+                   nfs:
+                      services: fs-00ea37bf562222563.efs.ap-south-1.amazonaws.com     (efs cha DNS taka)
+                      path: /test                                                     (efs la connect kelelya folder mde test folder banava)

@@ -1,3 +1,4 @@
+1)
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -16,3 +17,24 @@ spec:
            image: busybox
            command: ["echo","hello,k8s"]
        restartPolicy: Never
+
+
+2)
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: hellojob
+spec:
+  completions: 5
+  parallelism: 2
+  template:
+     metadata:
+        labels:
+          app: hello
+     spec:
+       containers:
+         - name: hello
+           image: busybox
+           command: ["echo","hello,k8s"]
+       restartPolicy: Never
+  backoffLimit: 4

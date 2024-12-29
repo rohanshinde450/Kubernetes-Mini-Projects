@@ -1,0 +1,52 @@
+---ConfigMap cod for MYSQL--
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+   name: mysqlwala
+spec:
+  containers:
+      - name: mysqlwalacontainer
+        image: mysql:8.0
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+                configMapKeyRef:
+                    name: mysql-config
+                    key: mysql-password
+
+
+
+
+------------configMap code for default.conf attach with nginx pods-------------
+
+***[first create configmap]*** 
+
+apiVersion: v1
+kind: Pod
+metadata:
+   name: nginxwala
+spec:
+  containers:
+      - name: nginxwalacontainer
+        image: nginx
+        
+
+***[create pod]***
+
+apiVersion: v1
+kind: Pod
+metadata:
+   name: nginxwala
+spec:
+  containers:
+      - name: nginxwalacontainer
+        image: nginx
+        volumeMounts:
+           - name: nginxconfigvolume
+             mountPath: /etc/nginx/conf.d/default.conf
+  volumes:
+    - name: nginxconfigvolume
+      configMap:
+          name: nginx-conf
